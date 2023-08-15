@@ -17,10 +17,10 @@ class Post extends Model
         'body' => 'array'
     ];
 
-    public function getTitleUpperCaseAttribute()
-    {
-        return strtoupper($this->title);
-    }
+    // public function getTitleUpperCaseAttribute()
+    // {
+    //     return strtoupper($this->title);
+    // }
 
     public function setTitleAttribute($value)
     {
