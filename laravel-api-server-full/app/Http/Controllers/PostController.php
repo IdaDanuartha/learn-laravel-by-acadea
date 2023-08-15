@@ -5,7 +5,10 @@ namespace App\Http\Controllers;
 use App\Models\Post;
 use App\Http\Requests\StorePostRequest;
 use App\Http\Requests\UpdatePostRequest;
+use App\Http\Resources\PostResource;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
+use Illuminate\Http\Resources\Json\ResourceCollection;
 use Illuminate\Support\Facades\DB;
 
 class PostController extends Controller
@@ -13,19 +16,18 @@ class PostController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index(): JsonResponse
+    public function index(Request $request): ResourceCollection
     {
-        $posts = Post::with(['comments', 'users'])->get();
+        $pageSize = $request->page_size ?? 12;
+        $posts = Post::with(['comments', 'users'])->paginate($pageSize);
 
-        return new JsonResponse([
-            'data' => $posts
-        ]);
+        return PostResource::collection($posts);
     }
 
     /**
      * Store a newly created resource in storage.
      */
-    public function store(StorePostRequest $request): JsonResponse
+    public function store(StorePostRequest $request): PostResource
     {
         $created = DB::transaction(function() use ($request) {
             $created = Post::create([
@@ -37,17 +39,15 @@ class PostController extends Controller
             return $created;
         });
 
-        return new JsonResponse([
-            'data' => $created
-        ], 201);
+        return new PostResource($created);
     }
 
     /**
      * Display the specified resource.
      */
-    public function show(Post $post): JsonResponse
+    public function show(Post $post): PostResource
     {
-        return new JsonResponse([[
+        return new PostResource([[
             'data' => $post
         ]]);
     }
@@ -55,7 +55,7 @@ class PostController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(UpdatePostRequest $request, Post $post): JsonResponse
+    public function update(UpdatePostRequest $request, Post $post)
     {
         $updated = $post->update($request->only(['title', 'body']));
         // $updated = $post->update([
@@ -69,15 +69,13 @@ class PostController extends Controller
             ], 400);
         }
 
-        return new JsonResponse([
-            'data' => $post
-        ]);
+        return new PostResource($post);
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Post $post): JsonResponse
+    public function destroy(Post $post): PostResource | JsonResponse
     {
         $deleted = $post->forceDelete();
 
@@ -87,8 +85,6 @@ class PostController extends Controller
             ], 400);
         }
 
-        return new JsonResponse([
-            'data' => $post
-        ]);
+        return new PostResource($post);
     }
 }
