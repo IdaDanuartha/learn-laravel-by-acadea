@@ -16,7 +16,7 @@ class SayCheeseMiddleware
     public function handle(Request $request, Closure $next): Response
     {
         dump("HEY CHEESE!!!");
-        return $next($request);
+        return $next($request); 
     }
 
     public function terminate($request, $response)
