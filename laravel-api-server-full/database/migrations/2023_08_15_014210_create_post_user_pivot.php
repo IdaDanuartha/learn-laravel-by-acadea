@@ -11,7 +11,7 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('post_user_pivot', function (Blueprint $table) {
+        Schema::create('post_user', function (Blueprint $table) {
             $table->foreignId('user_id');
             $table->foreign('user_id')->on('users')->references('id')->cascadeOnDelete();
             $table->foreignId('post_id');
@@ -26,6 +26,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('post_user_pivot');
+        Schema::dropIfExists('post_user');
     }
 };
