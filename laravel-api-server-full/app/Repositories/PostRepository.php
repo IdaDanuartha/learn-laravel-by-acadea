@@ -2,6 +2,7 @@
 
 namespace App\Repositories;
 
+use App\Events\Model\User\UserCreated;
 use App\Exceptions\GeneralJsonException;
 use App\Models\Post;
 use Illuminate\Support\Facades\DB;

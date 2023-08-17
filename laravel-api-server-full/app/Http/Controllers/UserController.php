@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\Model\User\UserCreated;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\JsonResponse;
@@ -14,7 +15,8 @@ class UserController extends Controller
      */
     public function index(): JsonResponse
     {
-        $users = User::with(['comments', 'users'])->get();
+        event(new UserCreated(User::factory()->make()));
+        $users = User::with(['comments', 'posts'])->get();
 
         return new JsonResponse([
             'data' => $users
