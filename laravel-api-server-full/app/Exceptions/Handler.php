@@ -12,6 +12,11 @@ class Handler extends ExceptionHandler
      *
      * @var array<int, string>
      */
+
+    protected $dontReport = [
+        //
+    ];
+
     protected $dontFlash = [
         'current_password',
         'password',
@@ -23,8 +28,12 @@ class Handler extends ExceptionHandler
      */
     public function register(): void
     {
-        $this->reportable(function (Throwable $e) {
-            //
+        $this->reportable(function (GeneralJsonException $e) {
+            dump("654321");
+        });
+
+        $this->renderable(function (GeneralJsonException $exception) {
+
         });
     }
 }
