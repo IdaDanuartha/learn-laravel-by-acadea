@@ -18,7 +18,7 @@ class PostRepositoryTest extends TestCase
         // 2. Replicate the env / restriction
         $repository = $this->app->make(PostRepository::class);
 
-        // 3. Define the source of truth
+        //  3. Define the source of truth
         $payload = [
             'title' => "Heyaa",
             "body" => []

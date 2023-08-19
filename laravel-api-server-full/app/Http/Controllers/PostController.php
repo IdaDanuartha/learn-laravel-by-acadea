@@ -20,7 +20,7 @@ class PostController extends Controller
      */
     public function index(Request $request): ResourceCollection
     {
-        throw new GeneralJsonException("Errorrsss");
+        // throw new GeneralJsonException("Errorrsss");
         $pageSize = $request->page_size ?? 12;
         $posts = Post::with(['comments', 'users'])->paginate($pageSize);
 
