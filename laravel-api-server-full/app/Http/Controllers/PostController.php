@@ -8,10 +8,14 @@ use App\Models\Post;
 use App\Http\Requests\StorePostRequest;
 use App\Http\Requests\UpdatePostRequest;
 use App\Http\Resources\PostResource;
+use App\Models\User;
+use App\Notifications\PostSharedNotification;
 use App\Repositories\PostRepository;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\ResourceCollection;
+use Illuminate\Support\Facades\URL;
+use Notification;
 
 class PostController extends Controller
 {
@@ -73,5 +77,26 @@ class PostController extends Controller
         $post = $repository->forceDelete($post);
 
         return new PostResource($post);
+    }
+
+    /**
+     * Share a specified resource from storage.
+     */
+    public function share(Request $request, Post $post): JsonResponse
+    {
+        $url = URL::temporarySignedRoute('posts.share', now()->addSeconds(30), [
+            'post' => $post->id
+        ]);
+
+        $users = User::whereIn('id', $request->user_ids)->get();
+
+        Notification::send($users, new PostSharedNotification($post, $url));
+
+        $user = User::find(1);
+        $user->notify(new PostSharedNotification($post, $url));
+
+        return new JsonResponse([
+            'data' => $url
+        ]);
     }
 }

@@ -21,4 +21,6 @@ Route::middleware([
         Route::patch('posts/{post}', "PostController@update")->name('update');
 
         Route::delete('posts/{post}', "PostController@destroy")->name('destroy');
+
+        Route::post('/posts/{post}/share', "PostController@share")->name('share');
     });
