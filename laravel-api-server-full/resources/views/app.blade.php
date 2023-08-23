@@ -57,6 +57,7 @@
         .then(() => {
             return login()
         })
+        .then(() => request('api/v1/users'))
     </script>
 
 </body>
